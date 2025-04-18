@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Surge</title>
+  <style>
+    /* Background Styles */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at center, #4b0082 0%, #1a001f 100%);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* Glowing Orbs */
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(128, 0, 255, 0.4);
+      box-shadow: 0 0 60px 20px rgba(128, 0, 255, 0.3);
+      z-index: 0;
+    }
+    .glow1 { width: 200px; height: 200px; top: 10%; left: 10%; }
+    .glow2 { width: 300px; height: 300px; bottom: 10%; right: 10%; }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(48, 0, 70, 0.9);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+    .nav-logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .nav-tabs {
+      display: flex;
+      gap: 1rem;
+    }
+    .nav-tabs button {
+      background: transparent;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .nav-tabs button:hover {
+      text-decoration: underline;
+    }
+
+    /* Tab Content */
+    .tab-content {
+      padding: 2rem;
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- Glowing Background -->
+  <div class="glow glow1"></div>
+  <div class="glow glow2"></div>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="nav-logo">Surge</div>
+    <div class="nav-tabs">
+      <button onclick="showTab('home')">Home</button>
+      <button onclick="showTab('games')">Games</button>
+      <button onclick="showTab('about')">About</button>
+    </div>
+  </div>
+
+  <!-- Tab Content -->
+  <div id="home" class="tab-content active">
+    <h1>Welcome to Surge</h1>
+    <p>Your go-to gaming zone with a powerful vibe.</p>
+  </div>
+
+  <div id="games" class="tab-content">
+    <h1>Our Games</h1>
+    <p>Browse and play all your favorite games right here.</p>
+  </div>
+
+  <div id="about" class="tab-content">
+    <h1>About Surge</h1>
+    <p>Built by gamers, for gamers. Surge is your ultimate digital playground.</p>
+  </div>
+
+  <script>
+    function showTab(id) {
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+    }
+  </script>
+</body>
+</html>
