@@ -7,11 +7,11 @@
   <style>
     :root {
       --bg-dark: radial-gradient(circle at center, #4b0082 0%, #1a001f 100%);
-      --bg-light: linear-gradient(to bottom, #f0f0f0, #cccccc);
+      --bg-light: #f4f4f4;
       --color-dark: white;
       --color-light: black;
       --navbar-dark: rgba(48, 0, 70, 0.9);
-      --navbar-light: #ddd;
+      --navbar-light: #e0e0e0;
     }
 
     body {
@@ -35,13 +35,14 @@
 
     .navbar {
       background: var(--navbar-dark);
-      padding: 1rem 2rem;
+      padding: 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       z-index: 2;
       width: 100%;
+      box-sizing: border-box;
     }
     .navbar.top { position: relative; top: 0; }
     .navbar.bottom { position: fixed; bottom: 0; left: 0; }
@@ -49,11 +50,14 @@
     .nav-logo {
       font-size: 1.5rem;
       font-weight: bold;
+      margin-right: 1rem;
     }
     .nav-tabs {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
+      flex: 1;
+      overflow-x: auto;
     }
     .nav-tabs button {
       background: transparent;
@@ -61,6 +65,7 @@
       border: none;
       font-size: 1rem;
       cursor: pointer;
+      white-space: nowrap;
     }
     .nav-tabs button:hover {
       text-decoration: underline;
@@ -128,16 +133,17 @@
   </div>
 
   <script>
-    // Initialize from localStorage
     window.onload = () => {
       if (localStorage.getItem('theme') === 'light') {
         document.getElementById('themeToggle').checked = true;
         setLightTheme();
+      } else {
+        setDarkTheme();
       }
-      if (localStorage.getItem('navbar') === 'bottom') {
-        document.getElementById('navbarPosition').value = 'bottom';
-        setNavbarPosition('bottom');
-      }
+
+      const position = localStorage.getItem('navbar') || 'top';
+      document.getElementById('navbarPosition').value = position;
+      setNavbarPosition(position);
     };
 
     function showTab(id) {
@@ -179,7 +185,11 @@
     function setNavbarPosition(position) {
       const navbar = document.getElementById('navbar');
       navbar.classList.remove('top', 'bottom');
-      navbar.classList.add(position);
+      if (position === 'bottom') {
+        navbar.classList.add('bottom');
+      } else {
+        navbar.classList.add('top');
+      }
     }
   </script>
 </body>
