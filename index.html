@@ -76,6 +76,7 @@
       <button onclick="showTab('home')">Home</button>
       <button onclick="showTab('games')">Games</button>
       <button onclick="showTab('about')">About</button>
+      <button onclick="showTab('settings')">Settings</button>
     </div>
   </div>
 
@@ -95,12 +96,53 @@
     <p>Built by gamers, for gamers. Surge is your ultimate digital playground.</p>
   </div>
 
+  <div id="settings" class="tab-content">
+    <h1>Settings</h1>
+    <label>
+      <input type="checkbox" id="themeToggle" onchange="toggleTheme()" />
+      Light Theme
+    </label>
+    <br /><br />
+    <label>
+      Navbar Position:
+      <select id="navbarPosition" onchange="changeNavbarPosition()">
+        <option value="top">Top</option>
+        <option value="bottom">Bottom</option>
+      </select>
+    </label>
+  </div>
+
   <script>
     function showTab(id) {
       document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
       });
       document.getElementById(id).classList.add('active');
+    }
+
+    function toggleTheme() {
+      const light = document.getElementById('themeToggle').checked;
+      document.body.style.background = light
+        ? 'linear-gradient(to bottom, #f0f0f0, #cccccc)'
+        : 'radial-gradient(circle at center, #4b0082 0%, #1a001f 100%)';
+      document.body.style.color = light ? '#000' : '#fff';
+      document.querySelector('.navbar').style.background = light
+        ? '#ddd'
+        : 'rgba(48, 0, 70, 0.9)';
+    }
+
+    function changeNavbarPosition() {
+      const navbar = document.querySelector('.navbar');
+      const value = document.getElementById('navbarPosition').value;
+      if (value === 'bottom') {
+        navbar.style.position = 'fixed';
+        navbar.style.bottom = '0';
+        navbar.style.top = '';
+      } else {
+        navbar.style.position = 'relative';
+        navbar.style.top = '0';
+        navbar.style.bottom = '';
+      }
     }
   </script>
 </body>
