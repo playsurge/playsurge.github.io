@@ -55,7 +55,7 @@
     .nav-tabs {
       display: flex;
       gap: 1rem;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       flex: 1;
       overflow-x: auto;
     }
@@ -124,7 +124,7 @@
     <div class="settings-section">
       <label>
         Navbar Position:
-        <select id="navbarPosition" onchange="changeNavbarPosition()">
+        <select id="navbarPosition">
           <option value="top">Top</option>
           <option value="bottom">Bottom</option>
         </select>
@@ -144,6 +144,12 @@
       const position = localStorage.getItem('navbar') || 'top';
       document.getElementById('navbarPosition').value = position;
       setNavbarPosition(position);
+
+      document.getElementById('navbarPosition').addEventListener('change', function() {
+        const value = this.value;
+        setNavbarPosition(value);
+        localStorage.setItem('navbar', value);
+      });
     };
 
     function showTab(id) {
@@ -174,12 +180,6 @@
       document.body.style.background = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark');
       document.body.style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-dark');
       document.querySelector('.navbar').style.background = getComputedStyle(document.documentElement).getPropertyValue('--navbar-dark');
-    }
-
-    function changeNavbarPosition() {
-      const value = document.getElementById('navbarPosition').value;
-      setNavbarPosition(value);
-      localStorage.setItem('navbar', value);
     }
 
     function setNavbarPosition(position) {
