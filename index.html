@@ -225,7 +225,7 @@
       document.querySelector('.navbar').style.background = getComputedStyle(document.documentElement).getPropertyValue('--navbar-dark');
     }
 
-    fetch('assets/games.json')
+    fetch('assets/json/games.json')
   .then(res => res.json())
   .then(games => {
     const container = document.getElementById('game-library');
