@@ -224,6 +224,26 @@
       document.body.style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-dark');
       document.querySelector('.navbar').style.background = getComputedStyle(document.documentElement).getPropertyValue('--navbar-dark');
     }
+
+    fetch('assets/games.json')
+  .then(res => res.json())
+  .then(games => {
+    const container = document.getElementById('game-library');
+    games.forEach(game => {
+      const card = document.createElement('div');
+      card.className = 'game-card';
+      card.innerHTML = `
+        <img src="${game.image}" alt="${game.name}">
+        <h3>${game.name}</h3>
+        <p>${game.description}</p>
+      `;
+      card.onclick = () => {
+        window.location.href = game.link;
+      };
+      container.appendChild(card);
+    });
+  });
+
   </script>
 </body>
 </html>
