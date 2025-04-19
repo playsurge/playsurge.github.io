@@ -14,7 +14,7 @@
       --navbar-light: #e0e0e0;
       --accent: #b266ff;
       --card-dark-bg: rgba(0, 0, 0, 0.2); /* Semi-transparent black */
-      --card-light-bg: rgba(255, 255, 255, 0.9); /* Fixed lighter semi-transparent white */
+      --card-light-bg: rgba(255, 255, 255, 0.5); /* Consistent lighter semi-transparent white */
     }
 
     body {
@@ -114,11 +114,11 @@
     }
 
     .game-card {
-      background: var(--card-dark-bg); /* Default dark background */
+      background: var(--card-dark-bg);
       border-radius: 1rem;
       padding: 1rem;
       text-align: center;
-      transition: transform 0.2s ease, background 0.2s ease;
+      transition: transform 0.2s ease;
       cursor: pointer;
     }
 
@@ -213,10 +213,10 @@
     window.onload = () => {
       const theme = localStorage.getItem('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
       if (theme === 'light') {
+        document.documentElement.classList.add('light-theme');
         document.getElementById('themeToggle').checked = true;
-        setLightTheme();
       } else {
-        setDarkTheme();
+        document.documentElement.classList.add('dark-theme');
       }
     };
 
@@ -242,40 +242,13 @@
     }
 
     function setLightTheme() {
-      document.body.style.background = '#f4f4f4';
-      document.body.style.color = 'black';
-      document.querySelector('.navbar').style.background = '#e0e0e0';
-
-      document.querySelectorAll('.game-card').forEach(card => {
-        card.style.background = 'var(--card-light-bg)'; // Consistently light background
-        card.style.color = 'black';
-        card.style.border = '1px solid #ccc';
-      });
-
-      const search = document.getElementById('gameSearch');
-      search.style.background = '#ffffff';
-      search.style.color = 'black';
-      search.style.border = '1px solid #ccc';
-      search.style.setProperty('--placeholder-color', 'rgba(0, 0, 0, 0.5)');
+      document.documentElement.classList.add('light-theme');
+      document.documentElement.classList.remove('dark-theme');
     }
 
     function setDarkTheme() {
-      const root = getComputedStyle(document.documentElement);
-      document.body.style.background = root.getPropertyValue('--bg-dark');
-      document.body.style.color = root.getPropertyValue('--color-dark');
-      document.querySelector('.navbar').style.background = root.getPropertyValue('--navbar-dark');
-
-      document.querySelectorAll('.game-card').forEach(card => {
-        card.style.background = 'var(--card-dark-bg)'; // Dark background
-        card.style.color = 'white';
-        card.style.border = '1px solid #333';
-      });
-
-      const search = document.getElementById('gameSearch');
-      search.style.background = 'rgba(255, 255, 255, 0.1)';
-      search.style.color = 'white';
-      search.style.border = 'none';
-      search.style.setProperty('--placeholder-color', 'rgba(255, 255, 255, 0.5)');
+      document.documentElement.classList.add('dark-theme');
+      document.documentElement.classList.remove('light-theme');
     }
 
     let allGames = [];
