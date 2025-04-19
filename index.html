@@ -40,7 +40,7 @@
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      z-index: 2;
+      z-index: 999;
       width: 100%;
       box-sizing: border-box;
     }
@@ -132,7 +132,7 @@
     <div class="settings-section">
       <label>
         Navbar Position:
-        <select id="navbarPosition" onchange="handleNavbarChange()">
+        <select id="navbarPosition">
           <option value="top">Top</option>
           <option value="bottom">Bottom</option>
         </select>
@@ -142,7 +142,8 @@
 
   <script>
     window.onload = () => {
-      if (localStorage.getItem('theme') === 'light') {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'light') {
         document.getElementById('themeToggle').checked = true;
         setLightTheme();
       } else {
@@ -152,6 +153,8 @@
       const position = localStorage.getItem('navbar') || 'top';
       document.getElementById('navbarPosition').value = position;
       setNavbarPosition(position);
+
+      document.getElementById('navbarPosition').addEventListener('change', handleNavbarChange);
     };
 
     function showTab(id) {
@@ -173,9 +176,9 @@
     }
 
     function setLightTheme() {
-      document.body.style.background = getComputedStyle(document.documentElement).getPropertyValue('--bg-light');
-      document.body.style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-light');
-      document.querySelector('.navbar').style.background = getComputedStyle(document.documentElement).getPropertyValue('--navbar-light');
+      document.body.style.background = '#f4f4f4';
+      document.body.style.color = 'black';
+      document.querySelector('.navbar').style.background = '#e0e0e0';
     }
 
     function setDarkTheme() {
