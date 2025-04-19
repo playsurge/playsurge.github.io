@@ -141,6 +141,29 @@
   opacity: 0.8;
 }
 
+.games-section {
+  padding: 2rem 0;
+}
+
+#gameSearch {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.7rem 1rem;
+  border-radius: 1rem;
+  border: none;
+  font-size: 1rem;
+  margin: 0 auto 1.5rem auto;
+  display: block;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  backdrop-filter: blur(10px);
+  outline: none;
+}
+
+#gameSearch::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
   </style>
 </head>
 <body>
@@ -163,7 +186,10 @@
   </div>
 
   <div id="games" class="tab-content">
-    <div id="game-library" class="game-library"></div>
+    <div class="games-section">
+      <input type="text" id="gameSearch" placeholder="Search games..." />
+      <div id="game-library" class="game-library"></div>
+    </div>
   </div>
 
   <div id="about" class="tab-content">
@@ -243,6 +269,42 @@
       container.appendChild(card);
     });
   });
+
+let allGames = [];
+
+fetch('assets/games.json')
+  .then(res => res.json())
+  .then(games => {
+    allGames = games;
+    renderGames(games);
+  });
+
+function renderGames(games) {
+  const container = document.getElementById('game-library');
+  container.innerHTML = ''; // Clear old games
+  games.forEach(game => {
+    const card = document.createElement('div');
+    card.className = 'game-card';
+    card.innerHTML = `
+      <img src="${game.image}" alt="${game.name}">
+      <h3>${game.name}</h3>
+      <p>${game.description}</p>
+    `;
+    card.onclick = () => {
+      window.location.href = game.link;
+    };
+    container.appendChild(card);
+  });
+}
+
+document.getElementById('gameSearch').addEventListener('input', (e) => {
+  const search = e.target.value.toLowerCase();
+  const filtered = allGames.filter(game =>
+    game.name.toLowerCase().includes(search) ||
+    game.description.toLowerCase().includes(search)
+  );
+  renderGames(filtered);
+});
 
   </script>
 </body>
