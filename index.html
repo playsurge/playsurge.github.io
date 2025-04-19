@@ -12,6 +12,7 @@
       --color-light: black;
       --navbar-dark: rgba(48, 0, 70, 0.9);
       --navbar-light: #e0e0e0;
+      --accent: #b266ff;
     }
 
     body {
@@ -43,15 +44,8 @@
       z-index: 999;
       width: 100%;
       box-sizing: border-box;
-    }
-    .navbar.top {
       position: fixed;
       top: 0;
-      left: 0;
-    }
-    .navbar.bottom {
-      position: fixed;
-      bottom: 0;
       left: 0;
     }
 
@@ -60,23 +54,42 @@
       font-weight: bold;
       margin-right: 1rem;
     }
+
     .nav-tabs {
       display: flex;
       gap: 1rem;
       flex-wrap: nowrap;
       flex: 1;
       overflow-x: auto;
+      position: relative;
     }
     .nav-tabs button {
+      position: relative;
       background: transparent;
       color: inherit;
       border: none;
       font-size: 1rem;
       cursor: pointer;
       white-space: nowrap;
+      padding: 0.5rem;
     }
-    .nav-tabs button:hover {
-      text-decoration: underline;
+    .nav-tabs button:hover,
+    .nav-tabs button.active {
+      outline: none;
+    }
+    .nav-tabs button.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 3px;
+      background-color: var(--accent);
+      animation: underline 0.3s ease forwards;
+    }
+    @keyframes underline {
+      from { width: 0; }
+      to { width: 100%; }
     }
 
     .tab-content {
@@ -96,13 +109,13 @@
   <div class="glow glow1"></div>
   <div class="glow glow2"></div>
 
-  <div class="navbar top" id="navbar">
+  <div class="navbar" id="navbar">
     <div class="nav-logo">Surge</div>
     <div class="nav-tabs">
-      <button onclick="showTab('home')">Home</button>
-      <button onclick="showTab('games')">Games</button>
-      <button onclick="showTab('about')">About</button>
-      <button onclick="showTab('settings')">Settings</button>
+      <button onclick="showTab('home')" id="tab-home" class="active">Home</button>
+      <button onclick="showTab('games')" id="tab-games">Games</button>
+      <button onclick="showTab('about')" id="tab-about">About</button>
+      <button onclick="showTab('settings')" id="tab-settings">Settings</button>
     </div>
   </div>
 
@@ -129,15 +142,6 @@
         Light Theme
       </label>
     </div>
-    <div class="settings-section">
-      <label>
-        Navbar Position:
-        <select id="navbarPosition">
-          <option value="top">Top</option>
-          <option value="bottom">Bottom</option>
-        </select>
-      </label>
-    </div>
   </div>
 
   <script>
@@ -149,12 +153,6 @@
       } else {
         setDarkTheme();
       }
-
-      const position = localStorage.getItem('navbar') || 'top';
-      document.getElementById('navbarPosition').value = position;
-      setNavbarPosition(position);
-
-      document.getElementById('navbarPosition').addEventListener('change', handleNavbarChange);
     };
 
     function showTab(id) {
@@ -162,6 +160,9 @@
         tab.classList.remove('active');
       });
       document.getElementById(id).classList.add('active');
+
+      document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`tab-${id}`).classList.add('active');
     }
 
     function toggleTheme() {
@@ -185,19 +186,6 @@
       document.body.style.background = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark');
       document.body.style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-dark');
       document.querySelector('.navbar').style.background = getComputedStyle(document.documentElement).getPropertyValue('--navbar-dark');
-    }
-
-    function setNavbarPosition(position) {
-      const navbar = document.getElementById('navbar');
-      navbar.classList.remove('top', 'bottom');
-      navbar.classList.add(position);
-    }
-
-    function handleNavbarChange() {
-      const select = document.getElementById('navbarPosition');
-      const value = select.value;
-      setNavbarPosition(value);
-      localStorage.setItem('navbar', value);
     }
   </script>
 </body>
