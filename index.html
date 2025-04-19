@@ -4,24 +4,46 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Surge</title>
+  <script>
+    (function () {
+      const saved = localStorage.getItem("theme");
+      const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+      const theme = saved || (prefersLight ? "light" : "dark");
+      document.documentElement.classList.add(`${theme}-theme`);
+    })();
+  </script>
   <style>
     :root {
-      --bg-dark: radial-gradient(circle at center, #4b0082 0%, #1a001f 100%);
-      --bg-light: #f4f4f4;
-      --color-dark: white;
-      --color-light: black;
-      --navbar-dark: rgba(48, 0, 70, 0.9);
-      --navbar-light: #e0e0e0;
       --accent: #b266ff;
-      --card-dark-bg: rgba(0, 0, 0, 0.2); /* Semi-transparent black */
-      --card-light-bg: rgba(255, 255, 255, 0.5); /* Consistent lighter semi-transparent white */
+      --card-dark-bg: rgba(0, 0, 0, 0.2);
+      --card-light-bg: rgba(255, 255, 255, 0.5);
+    }
+
+    .dark-theme {
+      --bg: radial-gradient(circle at center, #4b0082 0%, #1a001f 100%);
+      --text-color: white;
+      --navbar: rgba(48, 0, 70, 0.9);
+      --card-bg: var(--card-dark-bg);
+      --search-bg: rgba(255, 255, 255, 0.1);
+      --search-text: white;
+      --placeholder-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .light-theme {
+      --bg: #f4f4f4;
+      --text-color: black;
+      --navbar: #e0e0e0;
+      --card-bg: var(--card-light-bg);
+      --search-bg: #ffffff;
+      --search-text: black;
+      --placeholder-color: rgba(0, 0, 0, 0.4);
     }
 
     body {
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: var(--bg-dark);
-      color: var(--color-dark);
+      background: var(--bg);
+      color: var(--text-color);
       overflow-x: hidden;
       transition: background 0.3s, color 0.3s;
     }
@@ -37,7 +59,7 @@
     .glow2 { width: 300px; height: 300px; bottom: 10%; right: 10%; }
 
     .navbar {
-      background: var(--navbar-dark);
+      background: var(--navbar);
       padding: 1rem;
       display: flex;
       align-items: center;
@@ -114,12 +136,13 @@
     }
 
     .game-card {
-      background: var(--card-dark-bg);
+      background: var(--card-bg);
       border-radius: 1rem;
       padding: 1rem;
       text-align: center;
       transition: transform 0.2s ease;
       cursor: pointer;
+      border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
     .game-card:hover {
@@ -152,20 +175,18 @@
       max-width: 400px;
       padding: 0.7rem 1rem;
       border-radius: 1rem;
-      border: none;
       font-size: 1rem;
       margin: 0 auto 1.5rem auto;
       display: block;
-      background: rgba(255, 255, 255, 0.1);
-      color: inherit;
+      background: var(--search-bg);
+      color: var(--search-text);
       backdrop-filter: blur(10px);
       outline: none;
     }
 
     #gameSearch::placeholder {
-      color: var(--placeholder-color, rgba(255, 255, 255, 0.5));
+      color: var(--placeholder-color);
     }
-
   </style>
 </head>
 <body>
@@ -210,17 +231,6 @@
   </div>
 
   <script>
-    // Load theme on page load
-    window.onload = () => {
-      const theme = localStorage.getItem('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-      if (theme === 'light') {
-        document.documentElement.classList.add('light-theme');
-        document.getElementById('themeToggle').checked = true;
-      } else {
-        document.documentElement.classList.add('dark-theme');
-      }
-    };
-
     function showTab(id) {
       document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
@@ -232,25 +242,23 @@
     }
 
     function toggleTheme() {
-      const light = document.getElementById('themeToggle').checked;
-      if (light) {
-        setLightTheme();
-        localStorage.setItem('theme', 'light');
-      } else {
-        setDarkTheme();
+      const html = document.documentElement;
+      const isLight = html.classList.contains('light-theme');
+      if (isLight) {
+        html.classList.remove('light-theme');
+        html.classList.add('dark-theme');
         localStorage.setItem('theme', 'dark');
+      } else {
+        html.classList.remove('dark-theme');
+        html.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
       }
     }
 
-    function setLightTheme() {
-      document.documentElement.classList.add('light-theme');
-      document.documentElement.classList.remove('dark-theme');
-    }
-
-    function setDarkTheme() {
-      document.documentElement.classList.add('dark-theme');
-      document.documentElement.classList.remove('light-theme');
-    }
+    window.onload = () => {
+      const isLight = document.documentElement.classList.contains('light-theme');
+      document.getElementById('themeToggle').checked = isLight;
+    };
 
     let allGames = [];
 
@@ -263,7 +271,7 @@
 
     function renderGames(games) {
       const container = document.getElementById('game-library');
-      container.innerHTML = ''; // Clear old games
+      container.innerHTML = '';
       games.forEach(game => {
         const card = document.createElement('div');
         card.className = 'game-card';
@@ -287,7 +295,6 @@
       );
       renderGames(filtered);
     });
-
   </script>
 </body>
 </html>
