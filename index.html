@@ -13,6 +13,8 @@
       --navbar-dark: rgba(48, 0, 70, 0.9);
       --navbar-light: #e0e0e0;
       --accent: #b266ff;
+      --card-dark-bg: rgba(0, 0, 0, 0.2); /* Semi-transparent black */
+      --card-light-bg: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
     }
 
     body {
@@ -112,7 +114,7 @@
     }
 
     .game-card {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--card-dark-bg);
       border-radius: 1rem;
       padding: 1rem;
       text-align: center;
@@ -245,7 +247,7 @@
       document.querySelector('.navbar').style.background = '#e0e0e0';
 
       document.querySelectorAll('.game-card').forEach(card => {
-        card.style.background = '#ffffff';
+        card.style.background = 'var(--card-light-bg)';
         card.style.color = 'black';
         card.style.border = '1px solid #ccc';
       });
@@ -264,7 +266,7 @@
       document.querySelector('.navbar').style.background = root.getPropertyValue('--navbar-dark');
 
       document.querySelectorAll('.game-card').forEach(card => {
-        card.style.background = '#1f1f1f';
+        card.style.background = 'var(--card-dark-bg)';
         card.style.color = 'white';
         card.style.border = '1px solid #333';
       });
