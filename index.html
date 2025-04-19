@@ -44,8 +44,16 @@
       width: 100%;
       box-sizing: border-box;
     }
-    .navbar.top { position: relative; top: 0; }
-    .navbar.bottom { position: fixed; bottom: 0; left: 0; }
+    .navbar.top {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+    .navbar.bottom {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+    }
 
     .nav-logo {
       font-size: 1.5rem;
@@ -72,7 +80,7 @@
     }
 
     .tab-content {
-      padding: 2rem;
+      padding: 5rem 2rem 2rem 2rem;
       display: none;
     }
     .tab-content.active {
@@ -124,7 +132,7 @@
     <div class="settings-section">
       <label>
         Navbar Position:
-        <select id="navbarPosition">
+        <select id="navbarPosition" onchange="handleNavbarChange()">
           <option value="top">Top</option>
           <option value="bottom">Bottom</option>
         </select>
@@ -144,12 +152,6 @@
       const position = localStorage.getItem('navbar') || 'top';
       document.getElementById('navbarPosition').value = position;
       setNavbarPosition(position);
-
-      document.getElementById('navbarPosition').addEventListener('change', function() {
-        const value = this.value;
-        setNavbarPosition(value);
-        localStorage.setItem('navbar', value);
-      });
     };
 
     function showTab(id) {
@@ -185,11 +187,14 @@
     function setNavbarPosition(position) {
       const navbar = document.getElementById('navbar');
       navbar.classList.remove('top', 'bottom');
-      if (position === 'bottom') {
-        navbar.classList.add('bottom');
-      } else {
-        navbar.classList.add('top');
-      }
+      navbar.classList.add(position);
+    }
+
+    function handleNavbarChange() {
+      const select = document.getElementById('navbarPosition');
+      const value = select.value;
+      setNavbarPosition(value);
+      localStorage.setItem('navbar', value);
     }
   </script>
 </body>
