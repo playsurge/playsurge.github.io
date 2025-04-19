@@ -253,7 +253,7 @@
 
   <div id="games" class="tab-content">
     <div class="games-section">
-      <input type="text" id="gameSearch" placeholder="Search games..." />
+      <input type="text" id="gameSearch" placeholder="Search games..." oninput="filterGames()" />
       <div id="game-stats" style="text-align: center; margin-top: -1rem; margin-bottom: 1.5rem;"></div>
       
       <h2>Recently Played</h2>
@@ -356,6 +356,14 @@
     search.style.border = 'none';
     search.style.setProperty('--placeholder-color', 'rgba(255, 255, 255, 0.5)');
     document.getElementById('themeLabel').textContent = 'Dark';
+  }
+
+  function filterGames() {
+    const query = document.getElementById('gameSearch').value.toLowerCase();
+    const filteredGames = allGames.filter(game =>
+      game.name.toLowerCase().includes(query) || game.description.toLowerCase().includes(query)
+    );
+    renderGames(filteredGames);
   }
 
   function renderGames(games) {
