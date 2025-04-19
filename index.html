@@ -208,53 +208,63 @@
   </div>
 
   <script>
-    window.onload = () => {
-      const theme = localStorage.getItem('theme') || 'dark';
-      if (theme === 'light') {
-        document.getElementById('themeToggle').checked = true;
-        setLightTheme();
-      } else {
-        setDarkTheme();
-      }
-    };
+  let allGames = [];
 
-    function showTab(id) {
-      document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.getElementById(id).classList.add('active');
-
-      document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
-      document.getElementById(`tab-${id}`).classList.add('active');
+  // Theme setup
+  window.onload = () => {
+    const theme = localStorage.getItem('theme') || 'dark';
+    if (theme === 'light') {
+      document.getElementById('themeToggle').checked = true;
+      setLightTheme();
+    } else {
+      setDarkTheme();
     }
+  };
 
-    function toggleTheme() {
-      const light = document.getElementById('themeToggle').checked;
-      if (light) {
-        setLightTheme();
-        localStorage.setItem('theme', 'light');
-      } else {
-        setDarkTheme();
-        localStorage.setItem('theme', 'dark');
-      }
+  function showTab(id) {
+    document.querySelectorAll('.tab-content').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(`tab-${id}`).classList.add('active');
+  }
+
+  function toggleTheme() {
+    const light = document.getElementById('themeToggle').checked;
+    if (light) {
+      setLightTheme();
+      localStorage.setItem('theme', 'light');
+    } else {
+      setDarkTheme();
+      localStorage.setItem('theme', 'dark');
     }
+  }
 
-    function setLightTheme() {
-      document.body.style.background = '#f4f4f4';
-      document.body.style.color = 'black';
-      document.querySelector('.navbar').style.background = '#e0e0e0';
-    }
+  function setLightTheme() {
+    document.body.style.background = '#f4f4f4';
+    document.body.style.color = 'black';
+    document.querySelector('.navbar').style.background = '#e0e0e0';
+  }
 
-    function setDarkTheme() {
-      document.body.style.background = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark');
-      document.body.style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-dark');
-      document.querySelector('.navbar').style.background = getComputedStyle(document.documentElement).getPropertyValue('--navbar-dark');
-    }
+  function setDarkTheme() {
+    document.body.style.background = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark');
+    document.body.style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-dark');
+    document.querySelector('.navbar').style.background = getComputedStyle(document.documentElement).getPropertyValue('--navbar-dark');
+  }
 
-    fetch('assets/json/games.json')
-  .then(res => res.json())
-  .then(games => {
+  // Fetch and render games
+  fetch('assets/json/games.json')
+    .then(res => res.json())
+    .then(games => {
+      allGames = games;
+      renderGames(games);
+    });
+
+  function renderGames(games) {
     const container = document.getElementById('game-library');
+    container.innerHTML = '';
     games.forEach(game => {
       const card = document.createElement('div');
       card.className = 'game-card';
@@ -268,44 +278,17 @@
       };
       container.appendChild(card);
     });
+  }
+
+  // Search functionality
+  document.getElementById('gameSearch').addEventListener('input', (e) => {
+    const search = e.target.value.toLowerCase();
+    const filtered = allGames.filter(game =>
+      game.name.toLowerCase().includes(search) ||
+      game.description.toLowerCase().includes(search)
+    );
+    renderGames(filtered);
   });
-
-let allGames = [];
-
-fetch('assets/games.json')
-  .then(res => res.json())
-  .then(games => {
-    allGames = games;
-    renderGames(games);
-  });
-
-function renderGames(games) {
-  const container = document.getElementById('game-library');
-  container.innerHTML = ''; // Clear old games
-  games.forEach(game => {
-    const card = document.createElement('div');
-    card.className = 'game-card';
-    card.innerHTML = `
-      <img src="${game.image}" alt="${game.name}">
-      <h3>${game.name}</h3>
-      <p>${game.description}</p>
-    `;
-    card.onclick = () => {
-      window.location.href = game.link;
-    };
-    container.appendChild(card);
-  });
-}
-
-document.getElementById('gameSearch').addEventListener('input', (e) => {
-  const search = e.target.value.toLowerCase();
-  const filtered = allGames.filter(game =>
-    game.name.toLowerCase().includes(search) ||
-    game.description.toLowerCase().includes(search)
-  );
-  renderGames(filtered);
-});
-
-  </script>
+</script>
 </body>
 </html>
