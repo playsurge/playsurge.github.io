@@ -105,65 +105,64 @@
     }
 
     .game-library {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem 0;
-}
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem 0;
+    }
 
-.game-card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 1rem;
-  padding: 1rem;
-  text-align: center;
-  transition: transform 0.2s ease;
-  cursor: pointer;
-}
+    .game-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 1rem;
+      padding: 1rem;
+      text-align: center;
+      transition: transform 0.2s ease, background 0.3s ease;
+      cursor: pointer;
+    }
 
-.game-card:hover {
-  transform: scale(1.05);
-  background: rgba(128, 0, 255, 0.1);
-}
+    .game-card:hover {
+      transform: scale(1.05);
+      background: rgba(128, 0, 255, 0.1);
+    }
 
-.game-card img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 0.5rem;
-}
+    .game-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+    }
 
-.game-card h3 {
-  margin: 0.5rem 0 0.2rem;
-}
+    .game-card h3 {
+      margin: 0.5rem 0 0.2rem;
+    }
 
-.game-card p {
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
+    .game-card p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
 
-.games-section {
-  padding: 2rem 0;
-}
+    .games-section {
+      padding: 2rem 0;
+    }
 
-#gameSearch {
-  width: 100%;
-  max-width: 400px;
-  padding: 0.7rem 1rem;
-  border-radius: 1rem;
-  border: none;
-  font-size: 1rem;
-  margin: 0 auto 1.5rem auto;
-  display: block;
-  background: rgba(255, 255, 255, 0.1);
-  color: inherit;
-  backdrop-filter: blur(10px);
-  outline: none;
-}
+    #gameSearch {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.7rem 1rem;
+      border-radius: 1rem;
+      border: none;
+      font-size: 1rem;
+      margin: 0 auto 1.5rem auto;
+      display: block;
+      background: rgba(255, 255, 255, 0.1);
+      color: inherit;
+      backdrop-filter: blur(10px);
+      outline: none;
+    }
 
-#gameSearch::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
+    #gameSearch::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -208,87 +207,103 @@
   </div>
 
   <script>
-  let allGames = [];
+    window.onload = () => {
+      const theme = localStorage.getItem('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      if (theme === 'light') {
+        document.getElementById('themeToggle').checked = true;
+        setLightTheme();
+      } else {
+        setDarkTheme();
+      }
+    };
 
-  // Theme setup
-  window.onload = () => {
-    const theme = localStorage.getItem('theme') || 'dark';
-    if (theme === 'light') {
-      document.getElementById('themeToggle').checked = true;
-      setLightTheme();
-    } else {
-      setDarkTheme();
+    function showTab(id) {
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+
+      document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`tab-${id}`).classList.add('active');
     }
-  };
 
-  function showTab(id) {
-    document.querySelectorAll('.tab-content').forEach(tab => {
-      tab.classList.remove('active');
-    });
-    document.getElementById(id).classList.add('active');
-
-    document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`tab-${id}`).classList.add('active');
-  }
-
-  function toggleTheme() {
-    const light = document.getElementById('themeToggle').checked;
-    if (light) {
-      setLightTheme();
-      localStorage.setItem('theme', 'light');
-    } else {
-      setDarkTheme();
-      localStorage.setItem('theme', 'dark');
+    function toggleTheme() {
+      const light = document.getElementById('themeToggle').checked;
+      if (light) {
+        setLightTheme();
+        localStorage.setItem('theme', 'light');
+      } else {
+        setDarkTheme();
+        localStorage.setItem('theme', 'dark');
+      }
     }
-  }
 
-  function setLightTheme() {
-    document.body.style.background = '#f4f4f4';
-    document.body.style.color = 'black';
-    document.querySelector('.navbar').style.background = '#e0e0e0';
-  }
+    function setLightTheme() {
+      document.body.style.background = '#f4f4f4';
+      document.body.style.color = 'black';
+      document.querySelector('.navbar').style.background = '#e0e0e0';
 
-  function setDarkTheme() {
-    document.body.style.background = getComputedStyle(document.documentElement).getPropertyValue('--bg-dark');
-    document.body.style.color = getComputedStyle(document.documentElement).getPropertyValue('--color-dark');
-    document.querySelector('.navbar').style.background = getComputedStyle(document.documentElement).getPropertyValue('--navbar-dark');
-  }
+      document.querySelectorAll('.game-card').forEach(card => {
+        card.style.background = '#ffffff';
+        card.style.color = 'black';
+        card.style.border = '1px solid #ccc';
+      });
+    }
 
-  // Fetch and render games
-  fetch('assets/json/games.json')
-    .then(res => res.json())
-    .then(games => {
-      allGames = games;
-      renderGames(games);
+    function setDarkTheme() {
+      const root = getComputedStyle(document.documentElement);
+      document.body.style.background = root.getPropertyValue('--bg-dark');
+      document.body.style.color = root.getPropertyValue('--color-dark');
+      document.querySelector('.navbar').style.background = root.getPropertyValue('--navbar-dark');
+
+      document.querySelectorAll('.game-card').forEach(card => {
+        card.style.background = '#1f1f1f';
+        card.style.color = 'white';
+        card.style.border = '1px solid #333';
+      });
+    }
+
+    let allGames = [];
+
+    fetch('assets/json/games.json')
+      .then(res => res.json())
+      .then(games => {
+        allGames = games;
+        renderGames(games);
+      });
+
+    function renderGames(games) {
+      const container = document.getElementById('game-library');
+      container.innerHTML = ''; // Clear old games
+      games.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'game-card';
+
+        // Apply light/dark theme based on localStorage or system preference
+        card.style.background = localStorage.getItem('theme') === 'light' ? '#ffffff' : '#1f1f1f';
+        card.style.color = localStorage.getItem('theme') === 'light' ? 'black' : 'white';
+        card.style.border = localStorage.getItem('theme') === 'light' ? '1px solid #ccc' : '1px solid #333';
+
+        card.innerHTML = `
+          <img src="${game.image}" alt="${game.name}">
+          <h3>${game.name}</h3>
+          <p>${game.description}</p>
+        `;
+        card.onclick = () => {
+          window.location.href = game.link;
+        };
+        container.appendChild(card);
+      });
+    }
+
+    document.getElementById('gameSearch').addEventListener('input', (e) => {
+      const search = e.target.value.toLowerCase();
+      const filtered = allGames.filter(game =>
+        game.name.toLowerCase().includes(search) ||
+        game.description.toLowerCase().includes(search)
+      );
+      renderGames(filtered);
     });
-
-  function renderGames(games) {
-    const container = document.getElementById('game-library');
-    container.innerHTML = '';
-    games.forEach(game => {
-      const card = document.createElement('div');
-      card.className = 'game-card';
-      card.innerHTML = `
-        <img src="${game.image}" alt="${game.name}">
-        <h3>${game.name}</h3>
-        <p>${game.description}</p>
-      `;
-      card.onclick = () => {
-        window.location.href = game.link;
-      };
-      container.appendChild(card);
-    });
-  }
-
-  // Search functionality
-  document.getElementById('gameSearch').addEventListener('input', (e) => {
-    const search = e.target.value.toLowerCase();
-    const filtered = allGames.filter(game =>
-      game.name.toLowerCase().includes(search) ||
-      game.description.toLowerCase().includes(search)
-    );
-    renderGames(filtered);
-  });
-</script>
+  </script>
 </body>
 </html>
