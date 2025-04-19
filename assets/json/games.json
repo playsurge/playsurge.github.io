@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Slope",
+    "description": "Dodge obstacles and race down the neon slope.",
+    "image": "assets/images/slope.png",
+    "link": "games/slope/index.html"
+  },
+  {
+    "name": "1v1.LOL",
+    "description": "Build and battle in this Fortnite-style game.",
+    "image": "assets/images/1v1lol.png",
+    "link": "games/1v1lol/index.html"
+  },
+  {
+    "name": "Retro Bowl",
+    "description": "Manage your football team and win the bowl!",
+    "image": "assets/images/retrobowl.png",
+    "link": "games/retrobowl/index.html"
+  }
+]
