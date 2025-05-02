@@ -1,121 +1,102 @@
+// Global Variables
+let currentTab = 'home';
+let isDarkMode = false;
+let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+let recentlyPlayed = JSON.parse(localStorage.getItem('recentlyPlayed')) || [];
 let coins = 0;
-let gameInterval;
-let gameData = [];
 
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    document.getElementById("loader").style.display = "none";
-    document.getElementById("app").classList.remove("hidden");
-  }, 1000);
-
-  loadGames();
-  startCoinTimer();
+// Theme Toggle
+document.getElementById('theme-toggle').addEventListener('change', function() {
+    if (this.checked) {
+        document.body.classList.add('dark-mode');
+        isDarkMode = true;
+    } else {
+        document.body.classList.remove('dark-mode');
+        isDarkMode = false;
+    }
+    localStorage.setItem('isDarkMode', isDarkMode);
 });
 
-function showTab(tabId) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
+// Show and Hide Alerts
+function showAlert(type, message) {
+    const alert = document.createElement('div');
+    alert.classList.add('alert', type);
+    alert.innerHTML = `<span>${message}</span><button class="close-btn" onclick="closeAlert(this)">×</button>`;
+    document.body.appendChild(alert);
+
+    // Auto-close after 5 seconds
+    setTimeout(() => {
+        alert.style.opacity = '0';
+        setTimeout(() => alert.remove(), 300);
+    }, 5000);
+
+    console.log(`[ALERT - ${type.toUpperCase()}] ${message}`);
 }
 
-function loadGames() {
-  fetch("assets/data/games.json")
-    .then(res => res.json())
-    .then(games => {
-      gameData = games;
-      const gameList = document.getElementById("game-list");
-      gameList.innerHTML = "";
-      games.forEach(game => {
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `
-          <h3>${game.title}</h3>
-          <p>${game.description}</p>
-          <button onclick="openGame('${game.url}')">Play</button>
-        `;
-        gameList.appendChild(div);
-      });
+// Close alert manually
+function closeAlert(button) {
+    const alert = button.parentElement;
+    alert.style.opacity = '0';
+    setTimeout(() => alert.remove(), 300);
+}
+
+// Test Alert Buttons in Settings
+function testAlert(type, message) {
+    showAlert(type, message);
+}
+
+// Toggle Tabs
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.getElementById(e.target.getAttribute('data-tab')).classList.add('active');
+    });
+});
+
+// Favorites Toggle
+function toggleFavorites() {
+    const gameList = document.querySelector('.game-list');
+    gameList.innerHTML = '';
+    favorites.forEach(game => {
+        const gameCard = document.createElement('div');
+        gameCard.classList.add('game-card');
+        gameCard.innerHTML = `<h3>${game.title}</h3><p>${game.description}</p>`;
+        gameList.appendChild(gameCard);
     });
 }
 
-function openGame(url) {
-  const modal = document.getElementById("gameModal");
-  const frame = document.getElementById("gameFrame");
-  frame.src = url;
-  modal.style.display = "flex";
+function toggleRecentlyPlayed() {
+    const gameList = document.querySelector('.game-list');
+    gameList.innerHTML = '';
+    recentlyPlayed.forEach(game => {
+        const gameCard = document.createElement('div');
+        gameCard.classList.add('game-card');
+        gameCard.innerHTML = `<h3>${game.title}</h3><p>${game.description}</p>`;
+        gameList.appendChild(gameCard);
+    });
 }
 
-function closeGame() {
-  const modal = document.getElementById("gameModal");
-  document.getElementById("gameFrame").src = "";
-  modal.style.display = "none";
-}
-
-function goFullscreen() {
-  const frame = document.getElementById("gameFrame");
-  if (frame.requestFullscreen) frame.requestFullscreen();
-}
-
-function openInNewTab() {
-  window.open(document.getElementById("gameFrame").src, '_blank');
-}
-
-function filterGames() {
-  const searchQuery = document.getElementById("search").value.toLowerCase();
-  const filteredGames = gameData.filter(game =>
-    game.title.toLowerCase().includes(searchQuery)
-  );
-  loadFilteredGames(filteredGames);
-}
-
-function loadFilteredGames(filteredGames) {
-  const gameList = document.getElementById("game-list");
-  gameList.innerHTML = "";
-  filteredGames.forEach(game => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `
-      <h3>${game.title}</h3>
-      <p>${game.description}</p>
-      <button onclick="openGame('${game.url}')">Play</button>
+// Modal Window Logic
+function openGameModal(game) {
+    const modal = document.querySelector('.game-modal');
+    modal.classList.add('open');
+    modal.innerHTML = `
+        <h2>${game.title}</h2>
+        <p>${game.description}</p>
+        <button onclick="toggleFavorite(game)">Favorite</button>
+        <button onclick="closeModal()">Close</button>
     `;
-    gameList.appendChild(div);
-  });
 }
 
-function updateFeedbackForm() {
-  const type = document.getElementById("feedbackType").value;
-  const container = document.getElementById("feedbackFields");
-  container.innerHTML = "";
-  if (type === "game") {
-    container.innerHTML = '<input placeholder="Game Title"><input placeholder="Game URL">';
-  } else if (type === "bug") {
-    container.innerHTML = '<input placeholder="Page"><textarea placeholder="Describe the bug"></textarea>';
-  } else if (type === "other") {
-    container.innerHTML = '<textarea placeholder="Your message"></textarea>';
-  }
+function closeModal() {
+    document.querySelector('.game-modal').classList.remove('open');
 }
 
-function submitFeedback() {
-  alert("Thanks for your feedback!");
-}
-
-function startCoinTimer() {
-  gameInterval = setInterval(() => {
-    coins += 2;
-    console.log(`Coins: ${coins}`);
-  }, 60000); // Adds 2 coins every minute
-}
-
-function clearProgress() {
-  localStorage.clear();
-  alert("Progress cleared!");
-}
-
-function buyPack() {
-  if (coins >= 5) {
-    alert("Pack opening not implemented yet!");
-    coins -= 5; // Deduct coins for buying a pack
-  } else {
-    alert("You need more coins!");
-  }
+function toggleFavorite(game) {
+    if (favorites.includes(game)) {
+        favorites = favorites.filter(fav => fav !== game);
+    } else {
+        favorites.push(game);
+    }
+    localStorage.setItem('favorites', JSON.stringify(favorites));
 }
