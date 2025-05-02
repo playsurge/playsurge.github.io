@@ -1,7 +1,14 @@
-[
-  {
-    "title": "Test",
-    "description": "This is a test game.",
-    "url": "https://example.com/testgame"
-  }
-]
+{
+  "games": [
+    {
+      "title": "Test Game",
+      "description": "This is a test game.",
+      "url": "https://example.com/game1"
+    },
+    {
+      "title": "Another Game",
+      "description": "This is another game.",
+      "url": "https://example.com/game2"
+    }
+  ]
+}

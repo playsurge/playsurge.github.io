@@ -1,96 +1,89 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SURGE</title>
-  <link rel="stylesheet" href="assets/css/style.css"/>
+  <link rel="stylesheet" href="assets/style/main.css">
 </head>
 <body>
-  <div class="alert-container" id="alertContainer"></div>
-  <nav id="navbar">
-    <h1 class="logo">SURGE</h1>
-    <ul>
-      <li data-tab="home" class="active">Home</li>
-      <li data-tab="games">Games</li>
-      <li data-tab="tcg">TCG</li>
-      <li data-tab="about">About</li>
-      <li data-tab="feedback">Feedback</li>
-      <li data-tab="settings">Settings</li>
-    </ul>
+  <div id="customAlert" class="hidden">This is a custom alert!</div>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-container">
+      <ul class="nav-tabs">
+        <li class="nav-tab active" data-tab="home">Home</li>
+        <li class="nav-tab" data-tab="games">Games</li>
+        <li class="nav-tab" data-tab="tcg">TCG</li>
+        <li class="nav-tab" data-tab="about">About</li>
+        <li class="nav-tab" data-tab="feedback">Feedback</li>
+      </ul>
+      <button class="theme-toggle">🌙</button>
+    </div>
   </nav>
 
-  <main id="tabs">
-    <section id="home" class="tab active">
-      <h2>Welcome to SURGE!</h2>
-      <p>This is your place for awesome school-safe games and our own card game system!</p>
-    </section>
+  <!-- Home Tab -->
+  <div id="home" class="tab active-tab">
+    <h2>Welcome to SURGE</h2>
+    <p>Enjoy the best games and trading cards.</p>
+  </div>
 
-    <section id="games" class="tab">
-      <div class="toggle-buttons">
-        <button id="favoritesToggle">Favorites</button>
-        <button id="recentlyPlayedToggle">Recently Played</button>
-      </div>
-      <div id="gamesList"></div>
-    </section>
+  <!-- Games Tab -->
+  <div id="games" class="tab">
+    <h2>Games</h2>
+    <div class="game-grid">
+      <!-- Dynamically loaded game cards here -->
+    </div>
+    <div id="recentlyPlayed" class="recent-toggle">
+      <h3>Recently Played</h3>
+      <div id="recentGames"></div>
+    </div>
+    <div id="favorites" class="favorite-toggle">
+      <h3>Favorites</h3>
+      <div id="favoriteGames"></div>
+    </div>
+  </div>
 
-    <section id="tcg" class="tab">
-      <h2>Trading Card Game</h2>
-      <div id="tcgContent">
-        <!-- TCG content will be dynamically loaded here -->
-      </div>
-    </section>
+  <!-- TCG Tab -->
+  <div id="tcg" class="tab">
+    <h2>Trading Card Game (TCG)</h2>
+    <div id="tcgCards"></div>
+  </div>
 
-    <section id="about" class="tab">
-      <h2>About</h2>
-      <p>Made by Gavin — 7th grader and proud of it!</p>
-    </section>
+  <!-- About Tab -->
+  <div id="about" class="tab">
+    <h2>About the Creator</h2>
+    <p>Developer: Gavin</p>
+    <p>Project: SURGE Website</p>
+  </div>
 
-    <section id="feedback" class="tab">
-      <h2>Feedback</h2>
-      <form id="feedbackForm">
-        <select id="feedbackType">
-          <option value="suggestion">Game Suggestion</option>
-          <option value="bug">Report a Bug</option>
-          <option value="other">Other</option>
-        </select>
-        <div id="dynamicFields"></div>
-        <button type="submit">Submit</button>
-      </form>
-    </section>
+  <!-- Feedback Tab -->
+  <div id="feedback" class="tab">
+    <h2>Feedback</h2>
+    <form id="feedbackForm">
+      <label for="feedbackType">Feedback Type:</label>
+      <select id="feedbackType">
+        <option value="game">Game Suggestion</option>
+        <option value="bug">Report a Bug</option>
+        <option value="other">Other</option>
+      </select>
+      <div id="feedbackFields"></div>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 
-    <section id="settings" class="tab">
-      <h2>Settings</h2>
-      <label>
-        <input type="checkbox" id="themeToggle" />
-        Toggle Light/Dark Theme
-      </label>
-      <div class="test-alerts">
-        <h3>Test Alerts</h3>
-        <button onclick="showAlert('success', 'Success Alert!')">Success</button>
-        <button onclick="showAlert('error', 'Error Alert!')">Error</button>
-        <button onclick="showAlert('warning', 'Warning Alert!')">Warning</button>
-        <button onclick="showAlert('info', 'Info Alert!')">Info</button>
-      </div>
-    </section>
-  </main>
-
-  <div id="gameModal" class="modal hidden">
+  <div class="modal" id="gameModal">
     <div class="modal-content">
-      <span class="close" onclick="closeGameModal()">&times;</span>
-      <h2 id="modalTitle"></h2>
-      <iframe id="gameFrame" src="" frameborder="0" allowfullscreen></iframe>
-      <div class="modal-actions">
+      <span class="close-button" onclick="closeModal()">×</span>
+      <iframe id="gameIframe"></iframe>
+      <div class="modal-buttons">
         <button id="fullscreenBtn">Fullscreen</button>
-        <button id="newTabBtn">Open in New Tab</button>
-        <button id="favoriteBtn">☆ Favorite</button>
+        <button id="favoritesBtn">Add to Favorites</button>
       </div>
     </div>
   </div>
 
-  <script src="assets/js/alerts.js"></script>
-  <script src="assets/js/games.js"></script>
-  <script src="assets/js/tcg.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script src="assets/scripts/main.js"></script>
 </body>
 </html>
